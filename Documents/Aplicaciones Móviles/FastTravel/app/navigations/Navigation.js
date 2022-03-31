@@ -8,6 +8,8 @@ import MainStack from './MainStack'
 import SearchStack from './SearchStack'
 import BestPlacesStack from './BestPlacesStack'
 import AccountStack from './AccountStack'
+import AboutStack from './AboutStack'
+import MapStack from './MapStack'
 
 const Tab = createBottomTabNavigator()
 
@@ -15,7 +17,7 @@ export default function Navigation(){
     return(
         <NavigationContainer>
             <Tab.Navigator
-                initialRouteName='restaurants'
+                initialRouteName='travels'
                 tabBarOptions={{
                     inactiveTintColor: '#BDC3C4',
                     activeTintColor: '#05AFE1'
@@ -32,7 +34,7 @@ export default function Navigation(){
                 <Tab.Screen 
                     name= 'main' 
                     component={MainStack}
-                    options={{title:"Principales"}}
+                    options={{title:"Viajes Principales"}}
                 />
                 <Tab.Screen 
                     name= 'search' 
@@ -40,14 +42,24 @@ export default function Navigation(){
                     options={{title:"Buscar"}}
                 />
                 <Tab.Screen 
+                    name= 'account' 
+                    component={AccountStack}
+                    options={{title:"Mi cuenta"}}
+                />
+                <Tab.Screen 
                     name= 'best-places' 
                     component={BestPlacesStack}
                     options={{title:"Mejores Lugares"}}
                 />
                 <Tab.Screen 
-                    name= 'account' 
-                    component={AccountStack}
-                    options={{title:"Mi cuenta"}}
+                    name= 'map' 
+                    component={MapStack}
+                    options={{title:"Mapa"}}
+                />
+                <Tab.Screen 
+                    name= 'about' 
+                    component={AboutStack}
+                    options={{title:"Acerca de"}}
                 />
             </Tab.Navigator>
         </NavigationContainer>
@@ -71,6 +83,12 @@ function screenOptions(route, color){
             break;
         case 'account':
             iconName='account-box'
+            break;
+        case 'about':
+            iconName='information'
+            break;
+        case 'map':
+            iconName='map-marker-radius'
             break;
     }
     return(
