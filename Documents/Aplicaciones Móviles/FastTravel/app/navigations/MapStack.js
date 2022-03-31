@@ -1,16 +1,16 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import Main from '../screens/Main'
+import Map from '../screens/Map'
 
 const Stack = createStackNavigator()
 
-export default function MainStack(){
+export default function MapStack(){
     return(
         <Stack.Navigator>
             <Stack.Screen
-                name='Viajes Principales'
-                component={Main}
-                options={{tittle:'Viajes Principales'}}
+                name='Mapa'
+                component={Map}
+                options={{tittle:'Mapa'}}
             />
         </Stack.Navigator>
     )
