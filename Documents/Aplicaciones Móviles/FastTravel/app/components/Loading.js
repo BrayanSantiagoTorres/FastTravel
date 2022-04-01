@@ -29,9 +29,8 @@ const styles = StyleSheet.create({
         borderRadius: 9
     },
     text:{
-        color: '#32BCE5',
-        textTransform: 'upercase',
+        color: '#D9FFED',
+        textTransform: 'uppercase',
         marginTop: 10,
-        marginLeft: 65
     }
 })
