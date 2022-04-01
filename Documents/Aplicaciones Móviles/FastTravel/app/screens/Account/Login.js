@@ -30,7 +30,7 @@ function CreateAccount(){
                 style = {styles.linkRegister}
                 onPress={()=>navigation.navigate('register')}
             >
-                Sing Up
+                Registrarse
             </Text>
         </Text>
     )
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
         marginLeft:40
     },
     divider:{
-        backgroundColor:'#00a680',
+        backgroundColor:'#32BCE5',
         margin: 40
     },
     textRegister:{
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     linkRegister:{
-        color: '#00a680',
+        color: '#32BCE5',
         fontWeight: 'bold'
     }
 })
