@@ -2,23 +2,65 @@ import React, {useState} from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { Input, Icon, Button } from 'react-native-elements'
 import { validateEmail } from '../../utils/validation'
+import firebase from 'firebase'
+import {useNavigation} from '@react-navigation/native'
 
-export default function RegisterForm(){
+export default function RegisterForm(props){
+    const {toastRef} = props
     const [showPassword, setShowPassword] = useState(false)
     const [showRepeatPassword, setShowRepeatPassword] = useState(false)
     const [formData, setFormData] = useState(defaultFormValues())
+    const navigation = useNavigation()
 
     const onSubmit = () => {
         if(formData.email.length===0||formData.password.length===0||formData.repeatPassword.length===0){
-            console.log('Debes rellenar los campos vacíos')
+            toastRef.current.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Empty',
+                text2: 'Debes rellenar los campos vacíos',
+                visibilityTime: 3000,
+              });
         } else if (!validateEmail(formData.email)){
-            console.log('El correo proporcionado no es correcto')
+            toastRef.current.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Empty',
+                text2: 'El correo proporcionado no es correcto',
+                visibilityTime: 3000,
+              });
         } else if (formData.password !== formData.repeatPassword){
-            console.log('Tus contraseñas deben ser iguales')
+            toastRef.current.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Empty',
+                text2: 'Tus contraseñas deben ser iguales',
+                visibilityTime: 3000,
+              });
         } else if (formData.password.length < 6){
-            console.log('Tu contraseña debe tener un mínimo de 6 carácteres')
+            toastRef.current.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Empty',
+                text2: 'El password debe tener mínimo 6 carácteres',
+                visibilityTime: 3000,
+              });
         } else{
-            console.log('Muy bien')
+            firebase
+            .auth()
+            .createUserWithEmailAndPassword(formData.email, formData.password)
+            .then((response)=>{
+                navigation.navigate('Mi cuenta')
+            })
+            .catch(()=>{
+                toastRef.current.show({
+                    type: 'error',
+                    position: 'top',
+                    text1: 'Cuenta',
+                    text2: 'Este correo ya ha sido registrado',
+                    visibilityTime: 3000,
+                  });
+            })
         }
     }
 
