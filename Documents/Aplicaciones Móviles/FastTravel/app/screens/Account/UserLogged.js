@@ -6,17 +6,18 @@ import firebase from 'firebase'
 import InfoUser from '../../components/Account/InfoUser'
 
 export default function UserLogged(){
+    const [userInfo, setUserInfo] = useState(null)
     const toastRef = useRef()
     useEffect(()=>{
         (async()=>{
-            const user = firebase.auth().
+            const user = await firebase.auth().
             currentUser
-            console.log(user)
+            setUserInfo(user)
         })()
     },[])
     return(
         <View style={styles.viewUserInfo} >
-            <InfoUser/>
+            {userInfo&&<InfoUser userInfo={userInfo}/>}
             <Text>AccountOptions...</Text>
             <Button 
                 title='Cerrar Sesión'
