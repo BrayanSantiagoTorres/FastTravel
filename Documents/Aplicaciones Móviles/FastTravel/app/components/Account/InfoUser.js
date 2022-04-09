@@ -1,46 +1,111 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 import { Avatar } from 'react-native-elements'
+import firebase from 'firebase'
+import * as Permissions from 'expo-permissions'
+import * as ImagePicker from 'expo-image-picker'
 
 export default function InfoUser(props) {
-  const {userInfo} = props
-  const {photoURL, displayName, email} = userInfo
-  console.log(photoURL)
-  console.log(displayName)
-  console.log(email)
-  return (
-    <View style={styles.viewUserInfo}>
-      <Avatar
-        title='BRAYAN'
-        rounded
-        size='large'
-        containerStyle={styles.userInfoAvatar}
-        source={
-          photoURL ? {uri:photoURL} : require('../../../assets/img/avatardefFT.jpg')
+  const {userInfo: {uid, photoURL, displayName, email}, toastRef} = props
+
+  const changeAvatar= async ()=>{
+      const resultPermissions = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+      console.log(resultPermissions.permissions.mediaLibrary)
+      const resultPermissionsCamera = resultPermissions.permissions.mediaLibrary.status
+
+      if(resultPermissionsCamera === 'denied'){
+            toastRef.current.show({
+                type: 'info',
+                position: 'top',
+                text1: 'Permissions',
+                text2: 'Es necesario aceptar los permisos de la galería',
+                visibilityTime: 3000,
+            });
+      } else {
+          const result = await ImagePicker.launchImageLibraryAsync({
+              allowsEditing:true,
+              aspect:[4,3]
+          })
+          console.log(result)
+          if (result.cancelled){
+                toastRef.current.show({
+                    type: 'info',
+                    position: 'top',
+                    text1: 'Cancelled',
+                    text2: 'No eligió avatar',
+                    visibilityTime: 3000,
+                });
+          } else {
+              uploadImage(result.uri).then(()=>{
+                  console.log('imagen dentro de firebase')
+                  updatePhotoUrl()
+              }).catch(()=>{
+                toastRef.current.show({
+                    type: 'error',
+                    position: 'top',
+                    text1: 'Firebase error',
+                    text2: 'Error al actualizar el avatar',
+                    visibilityTime: 3000,
+                });
+              })
+          }
       }
-      />
-      <View>
+  }
+
+  const uploadImage = async (uri) => {
+      console.log(uri)
+      const response = await fetch(uri)
+      console.log(JSON.stringify(response))
+      const blob = await response.blob()
+      console.log(JSON.stringify(blob))
+      const ref = firebase.storage().ref().child(`avatar/${uid}`)
+      return ref.put(blob)
+  }
+
+  const updatePhotoUrl = () =>{
+      firebase.storage().ref(`avatar/${uid}`).getDownloadURL().then(async(response)=>{
+          console.log(response)
+          const update = { photoURL: response }
+          await firebase.auth().currentUser.updateProfile(update)
+          console.log('Imagen cambiada')
+      })
+  }
+
+  //agregar un spiner para que la imagen se cargue automaticamente y no tengamos que resfrescar
+
+  return (
+      <View style={styles.viewUserInfo}>
+        <Avatar
+            title='SANTI'
+            rounded
+            size='large'
+            onPress={changeAvatar}
+            containerStyle={styles.userInfoAvatar}
+            source={
+                photoURL ? {uri:photoURL} : require('../../../assets/img/avatardefFT.jpg')
+            }
+        />
+        <View>
             <Text style={styles.displayName}>
-                {displayName ? displayName : 'Usuario Invitado'}
+                {displayName ? displayName : 'Invitado'}
             </Text>
-            <Text>{email ? email : 'Entrada sin autenticación'}</Text>
+            <Text>{email ? email : 'Entrada por SSO'}</Text>
         </View>
-    </View>
+      </View>
   )
 }
 
 const styles = StyleSheet.create({
-  viewUserInfo:{
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexBasis: 'row',
-      backgroundColor: '#f2f2f2',
-      paddingTop: 30,
-      paddingBottom: 30
+    viewUserInfo:{
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f2f2f2',
+        paddingTop: 30,
+        paddingBottom: 30
     },
     userInfoAvatar:{
-      marginTop: 20,
-      backgroundColor: '#00a680'
+        marginTop: 20,
+        backgroundColor: '#00a680'
     },
     displayName:{
         fontWeight:'bold',
