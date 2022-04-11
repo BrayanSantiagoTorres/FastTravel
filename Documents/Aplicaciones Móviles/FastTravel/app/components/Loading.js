@@ -32,5 +32,6 @@ const styles = StyleSheet.create({
         color: '#D9FFED',
         textTransform: 'uppercase',
         marginTop: 10,
+        textAlign: 'center'
     }
 })

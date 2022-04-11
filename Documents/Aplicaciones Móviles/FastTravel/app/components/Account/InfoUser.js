@@ -71,7 +71,6 @@ export default function InfoUser(props) {
       })
   }
 
-  //agregar un spiner para que la imagen se cargue automaticamente y no tengamos que resfrescar
 
   return (
       <View style={styles.viewUserInfo}>

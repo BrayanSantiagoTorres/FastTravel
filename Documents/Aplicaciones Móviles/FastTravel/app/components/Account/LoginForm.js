@@ -1,122 +1,114 @@
-import React, {useState} from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Input, Icon, Button } from 'react-native-elements'
-import {useNavigation} from '@react-navigation/native'
-import { validateEmail } from '../../utils/validation'
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import { Avatar } from 'react-native-elements'
 import firebase from 'firebase'
+import * as Permissions from 'expo-permissions'
+import * as ImagePicker from 'expo-image-picker'
 
-export default function LoginForm(props) {
-    const {toastRef} = props
-    const [showPassword, setShowPassword] = useState(false)
-    const [formData, setFormData] = useState(defaultFormValues())
-    const navigation = useNavigation()
+export default function InfoUser(props) {
+  const {userInfo: {uid, photoURL, displayName, email}, toastRef} = props
 
-    const doLogin = ()=>{
-        if(formData.email.length===0||formData.password.length===0){
+  const changeAvatar= async ()=>{
+      const resultPermissions = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+      console.log(resultPermissions.permissions.mediaLibrary)
+      const resultPermissionsCamera = resultPermissions.permissions.mediaLibrary.status
+
+      if(resultPermissionsCamera === 'denied'){
             toastRef.current.show({
-                type: 'error',
+                type: 'info',
                 position: 'top',
-                text1: 'Empty',
-                text2: 'Debes rellenar los campos vacíos',
+                text1: 'Permissions',
+                text2: 'Es necesario aceptar los permisos de la galería',
                 visibilityTime: 3000,
-              });
-        } else if (!validateEmail(formData.email)){
-            toastRef.current.show({
-                type: 'error',
-                position: 'top',
-                text1: 'Empty',
-                text2: 'El correo o la contraseña son incorrectos',
-                visibilityTime: 3000,
-              });
-        } else if (formData.password.length < 6){
-            toastRef.current.show({
-                type: 'error',
-                position: 'top',
-                text1: 'Empty',
-                text2: 'El password debe tener mínimo 6 carácteres',
-                visibilityTime: 3000,
-              });
-        } else{
-            firebase
-                .auth()
-                .signInWithEmailAndPassword(formData.email, formData.password)
-                .then(()=>{
-                    navigation.navigate('Mi cuenta')
-                })
-                .catch(()=>{
-                    toastRef.current.show({
-                        type: 'error',
-                        position: 'top',
-                        text1: 'Cuenta',
-                        text2: 'El correo no se ha registrado',
-                        visibilityTime: 3000,
-                      });
-                })
-        }
-    }
-    
-    const onChange = (e, type) => {
-        setFormData({...formData,[type]: e.nativeEvent.text})
-    }
+            });
+      } else {
+          const result = await ImagePicker.launchImageLibraryAsync({
+              allowsEditing:true,
+              aspect:[4,3]
+          })
+          console.log(result)
+          if (result.cancelled){
+                toastRef.current.show({
+                    type: 'info',
+                    position: 'top',
+                    text1: 'Cancelled',
+                    text2: 'No eligió avatar',
+                    visibilityTime: 3000,
+                });
+          } else {
+              uploadImage(result.uri).then(()=>{
+                  console.log('imagen dentro de firebase')
+                  updatePhotoUrl()
+              }).catch(()=>{
+                toastRef.current.show({
+                    type: 'error',
+                    position: 'top',
+                    text1: 'Firebase error',
+                    text2: 'Error al actualizar el avatar',
+                    visibilityTime: 3000,
+                });
+              })
+          }
+      }
+  }
+
+  const uploadImage = async (uri) => {
+      console.log(uri)
+      const response = await fetch(uri)
+      console.log(JSON.stringify(response))
+      const blob = await response.blob()
+      console.log(JSON.stringify(blob))
+      const ref = firebase.storage().ref().child(`avatar/${uid}`)
+      return ref.put(blob)
+  }
+
+  const updatePhotoUrl = () =>{
+      firebase.storage().ref(`avatar/${uid}`).getDownloadURL().then(async(response)=>{
+          console.log(response)
+          const update = { photoURL: response }
+          await firebase.auth().currentUser.updateProfile(update)
+          console.log('Imagen cambiada')
+      })
+  }
+
 
   return (
-    <View style={styles.container}>
-        <Input
-                placeholder='Correo Electronico'
-                containerStyle={styles.inputForm}
-                onChange={(e)=>onChange(e, 'email')}
-                rightIcon={<Icon type= 'material-community' name='email' iconStyle={styles.iconRight}/>}
-            />
-            <Input
-                placeholder='Contraseña'
-                containerStyle={styles.inputForm}
-                password={true}
-                secureTextEntry={showPassword ? false : true}
-                onChange={(e)=>onChange(e, 'password')}
-                rightIcon={<Icon 
-                    type= 'material-community' 
-                    name={showPassword ? 'eye-off-outline' : 'eye-outline'} 
-                    iconStyle={styles.iconRight}
-                    onPress={()=> setShowPassword(!showPassword)}
-            />}
-            />
-            <Button
-                title='Iniciar Sesión'
-                containerStyle={styles.btnContainerRegister}
-                buttonStyle={styles.btnRegister}
-                onPress={(doLogin)}
-            />
-    </View>
+      <View style={styles.viewUserInfo}>
+        <Avatar
+            title='SANTI'
+            rounded
+            size='large'
+            onPress={changeAvatar}
+            containerStyle={styles.userInfoAvatar}
+            source={
+                photoURL ? {uri:photoURL} : require('../../../assets/img/avatardefFT.jpg')
+            }
+        />
+        <View>
+            <Text style={styles.displayName}>
+                {displayName ? displayName : 'Invitado'}
+            </Text>
+            <Text>{email ? email : 'Entrada por SSO'}</Text>
+        </View>
+      </View>
   )
 }
 
-function defaultFormValues(){
-    return{
-        email: '',
-        password: ''
-    }
-}
-
 const styles = StyleSheet.create({
-    container:{
-        flex: 1,
+    viewUserInfo:{
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 35
+        backgroundColor: '#f2f2f2',
+        paddingTop: 30,
+        paddingBottom: 30
     },
-    inputForm:{
-        width: '100%',
-        marginTop: 20
-    },
-    btnContainerRegister:{
+    userInfoAvatar:{
         marginTop: 20,
-        width: '98%'
+        backgroundColor: '#00a680'
     },
-    btnRegister:{
-        backgroundColor:'#0DB8EB',
-        borderRadius: 25
-    },
-    iconRight:{
-        color: '#c1c1c1'
+    displayName:{
+        fontWeight:'bold',
+        paddingBottom: 5,
+        textAlign: 'center'
     }
 })
