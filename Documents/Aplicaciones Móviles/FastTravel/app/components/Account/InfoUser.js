@@ -18,7 +18,7 @@ export default function InfoUser(props) {
                 type: 'info',
                 position: 'top',
                 text1: 'Permissions',
-                text2: 'Es necesario aceptar los permisos de la galería',
+                text2: 'Es necesario permitir los permisos a la galería',
                 visibilityTime: 3000,
             });
       } else {
@@ -32,19 +32,19 @@ export default function InfoUser(props) {
                     type: 'info',
                     position: 'top',
                     text1: 'Cancelled',
-                    text2: 'No eligió avatar',
+                    text2: 'No seleccionaste foto de perfil',
                     visibilityTime: 3000,
                 });
           } else {
               uploadImage(result.uri).then(()=>{
-                  console.log('imagen dentro de firebase')
+                  console.log('La imagen se ha guardado en firebase')
                   updatePhotoUrl()
               }).catch(()=>{
                 toastRef.current.show({
                     type: 'error',
                     position: 'top',
                     text1: 'Firebase error',
-                    text2: 'Error al actualizar el avatar',
+                    text2: 'No se pudo actualizar el Avatar',
                     visibilityTime: 3000,
                 });
               })
@@ -67,7 +67,7 @@ export default function InfoUser(props) {
           console.log(response)
           const update = { photoURL: response }
           await firebase.auth().currentUser.updateProfile(update)
-          console.log('Imagen cambiada')
+          console.log('Imagen de perfil actualizada')
       })
   }
 
