@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, ScrollView, Image } from 'react-native'
 import { Button } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
 
-
 export default function UserGuest(){
     const navigation = useNavigation()
     return(
@@ -53,7 +52,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     btnStyle:{
-        backgroundColor:'#27C8F7',
+        backgroundColor:'#1CC0F0',
         borderRadius: 25
     },
     btnContainer:{

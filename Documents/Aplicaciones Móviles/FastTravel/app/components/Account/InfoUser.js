@@ -18,7 +18,7 @@ export default function InfoUser(props) {
                 type: 'info',
                 position: 'top',
                 text1: 'Permissions',
-                text2: 'Es necesario permitir los permisos a la galería',
+                text2: 'Es necesario aceptar los permisos de la galería',
                 visibilityTime: 3000,
             });
       } else {
@@ -32,19 +32,19 @@ export default function InfoUser(props) {
                     type: 'info',
                     position: 'top',
                     text1: 'Cancelled',
-                    text2: 'No seleccionaste foto de perfil',
+                    text2: 'No eligió avatar',
                     visibilityTime: 3000,
                 });
           } else {
               uploadImage(result.uri).then(()=>{
-                  console.log('La imagen se ha guardado en firebase')
+                  console.log('imagen dentro de firebase')
                   updatePhotoUrl()
               }).catch(()=>{
                 toastRef.current.show({
                     type: 'error',
                     position: 'top',
                     text1: 'Firebase error',
-                    text2: 'No se pudo actualizar el Avatar',
+                    text2: 'Error al actualizar el avatar',
                     visibilityTime: 3000,
                 });
               })
@@ -67,7 +67,7 @@ export default function InfoUser(props) {
           console.log(response)
           const update = { photoURL: response }
           await firebase.auth().currentUser.updateProfile(update)
-          console.log('Imagen de perfil actualizada')
+          console.log('Imagen cambiada')
       })
   }
 
@@ -76,7 +76,7 @@ export default function InfoUser(props) {
   return (
       <View style={styles.viewUserInfo}>
         <Avatar
-            title='SANTI'
+            title='NewUser'
             rounded
             size='large'
             onPress={changeAvatar}
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     viewUserInfo:{
         alignItems: 'center',
         justifyContent: 'center',
+        //flexBasis: 'row',
         backgroundColor: '#f2f2f2',
         paddingTop: 30,
         paddingBottom: 30

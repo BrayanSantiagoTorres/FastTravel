@@ -1,12 +1,48 @@
-import React from "react";
+import React, {useState} from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ListItem, Icon } from "react-native-elements";
+import Modal from "../Modal";
+import ChangeDisplayNameForm from "./ChangeDisplayNameForm";
+import ChangeEmailForm from "./ChangeEmailForm";
 
 export default function AccountOptions(props){
-    const {userInfo, toastRef} = props
+    const {userInfo, toastRef, setReloadUserInfo} = props
+    const [showModal, setShowModal] = useState(false)
+    const [renderComponent, setRenderComponent] = useState(null)
+
     const selectedComponent = (key) =>{
-        console.log('click')
-        console.log(key)
+      switch(key){
+        case 'displayName':
+            setRenderComponent(
+              <ChangeDisplayNameForm
+                  displayName={userInfo.displayName}
+                  setShowModal={setShowModal}
+                  toastRef={toastRef}
+                  setReloadUserInfo = {setReloadUserInfo}
+              />
+            )
+            setShowModal(true)
+            break
+        case 'displayEmail':
+          setRenderComponent(
+            <ChangeEmailForm
+                  email={userInfo.email}
+                  setShowModal={setShowModal}
+                  toastRef={toastRef}
+                  setReloadUserInfo = {setReloadUserInfo}
+            />
+          )
+          setShowModal(true)
+          break;
+            case 'displayPassword':
+              setRenderComponent(<Text>Cambiando el password</Text>)
+              setShowModal(true)
+              break
+            default:
+              setRenderComponent(null)
+              setShowModal(false)
+              break
+        }
     }
     const menuOptions = generateOptions(selectedComponent)
 
@@ -20,6 +56,11 @@ export default function AccountOptions(props){
               </ListItem.Content>
           </ListItem>
       ))}
+      {renderComponent && (
+      <Modal isVisible={showModal} setIsVisible={setShowModal}>
+          {renderComponent}
+      </Modal>
+      )}
     </View>
   )
 }
@@ -27,17 +68,17 @@ export default function AccountOptions(props){
 function generateOptions(selectedComponent){
   return [
     {
-      title: 'Cambiar Nombre de usuario y Apellidos',
+      title: 'Editar usuario y apellidos',
       iconNameLeft: 'account-circle',
       onPress: () => selectedComponent('displayName')
     },
     {
-      title: 'Actualizar mi email',
+      title: 'Actualizar mi correo',
       iconNameLeft: 'drafts',
       onPress: () => selectedComponent('displayEmail')
     },
     {
-      title: 'Cambiar contraseña',
+      title: 'Cambiar mi contraseña',
       iconNameLeft: 'lock',
       onPress: () => selectedComponent('displayPassword')
     }

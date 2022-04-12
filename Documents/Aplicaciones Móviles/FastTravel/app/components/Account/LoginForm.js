@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
 import { StyleSheet, View } from 'react-native'
+import React, {useState} from 'react'
 import { Input, Icon, Button } from 'react-native-elements'
 import {useNavigation} from '@react-navigation/native'
 import { validateEmail } from '../../utils/validation'
@@ -11,31 +11,31 @@ export default function LoginForm(props) {
     const [formData, setFormData] = useState(defaultFormValues())
     const navigation = useNavigation()
 
-    const doLogin = ()=>{
+    const onSubmit = () => {
         if(formData.email.length===0||formData.password.length===0){
             toastRef.current.show({
                 type: 'error',
                 position: 'top',
                 text1: 'Empty',
-                text2: 'Debes rellenar los campos vacíos',
+                text2: 'Todos los campos son requeridos',
                 visibilityTime: 3000,
               });
         } else if (!validateEmail(formData.email)){
             toastRef.current.show({
                 type: 'error',
                 position: 'top',
-                text1: 'Empty',
-                text2: 'El correo o la contraseña son incorrectos',
+                text1: 'Password',
+                text2: 'El email no es correcto',
                 visibilityTime: 3000,
               });
         } else if (formData.password.length < 6){
             toastRef.current.show({
                 type: 'error',
                 position: 'top',
-                text1: 'Empty',
-                text2: 'El password debe tener mínimo 6 carácteres',
+                text1: 'Password',
+                text2: 'El password debe tener almenos 6 carácteres',
                 visibilityTime: 3000,
-              });
+              }); 
         } else{
             firebase
                 .auth()
@@ -48,7 +48,7 @@ export default function LoginForm(props) {
                         type: 'error',
                         position: 'top',
                         text1: 'Cuenta',
-                        text2: 'El correo no se ha registrado',
+                        text2: 'Las credenciales no son correctas',
                         visibilityTime: 3000,
                       });
                 })
@@ -57,7 +57,7 @@ export default function LoginForm(props) {
     
     const onChange = (e, type) => {
         setFormData({...formData,[type]: e.nativeEvent.text})
-    }
+     }
 
   return (
     <View style={styles.container}>
@@ -65,7 +65,7 @@ export default function LoginForm(props) {
                 placeholder='Correo Electronico'
                 containerStyle={styles.inputForm}
                 onChange={(e)=>onChange(e, 'email')}
-                rightIcon={<Icon type= 'material-community' name='email' iconStyle={styles.iconRight}/>}
+                rightIcon={<Icon type= 'material-community' name='at' iconStyle={styles.iconRight}/>}
             />
             <Input
                 placeholder='Contraseña'
@@ -79,12 +79,12 @@ export default function LoginForm(props) {
                     iconStyle={styles.iconRight}
                     onPress={()=> setShowPassword(!showPassword)}
             />}
-            />
-            <Button
+        />
+        <Button
                 title='Iniciar Sesión'
                 containerStyle={styles.btnContainerRegister}
                 buttonStyle={styles.btnRegister}
-                onPress={(doLogin)}
+                onPress={()=>onSubmit()}
             />
     </View>
   )
@@ -102,19 +102,20 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 35
+        marginTop: 30
     },
     inputForm:{
         width: '100%',
         marginTop: 20
     },
     btnContainerRegister:{
-        marginTop: 20,
-        width: '98%'
+        marginTop: 22,
+        width: '70%',
+        borderRadius: 25
     },
     btnRegister:{
-        backgroundColor:'#0DB8EB',
-        borderRadius: 25
+        backgroundColor:'#1CC0F0',
+        alignContent: 'center'
     },
     iconRight:{
         color: '#c1c1c1'

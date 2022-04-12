@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { Input, Icon, Button } from 'react-native-elements'
 import { validateEmail } from '../../utils/validation'
 import firebase from 'firebase'
@@ -18,14 +18,14 @@ export default function RegisterForm(props){
                 type: 'error',
                 position: 'top',
                 text1: 'Empty',
-                text2: 'Debes rellenar los campos vacíos',
+                text2: 'Todos los campos son requeridos',
                 visibilityTime: 3000,
               });
         } else if (!validateEmail(formData.email)){
             toastRef.current.show({
                 type: 'error',
                 position: 'top',
-                text1: 'Empty',
+                text1: 'Password',
                 text2: 'El correo proporcionado no es correcto',
                 visibilityTime: 3000,
               });
@@ -33,16 +33,16 @@ export default function RegisterForm(props){
             toastRef.current.show({
                 type: 'error',
                 position: 'top',
-                text1: 'Empty',
-                text2: 'Tus contraseñas deben ser iguales',
+                text1: 'Password',
+                text2: 'Las contraseñas deben ser iguales',
                 visibilityTime: 3000,
               });
         } else if (formData.password.length < 6){
             toastRef.current.show({
                 type: 'error',
                 position: 'top',
-                text1: 'Empty',
-                text2: 'El password debe tener mínimo 6 carácteres',
+                text1: 'Password',
+                text2: 'Tu contraseña debe tener almenos 6 carácteres',
                 visibilityTime: 3000,
               });
         } else{
@@ -57,7 +57,7 @@ export default function RegisterForm(props){
                     type: 'error',
                     position: 'top',
                     text1: 'Cuenta',
-                    text2: 'Este correo ya ha sido registrado',
+                    text2: 'Este correo ya ha sido registrado anteriormente',
                     visibilityTime: 3000,
                   });
             })
@@ -65,7 +65,7 @@ export default function RegisterForm(props){
     }
 
     const onChange = (e, type) => {
-        setFormData({...formData,[type]: e.nativeEvent.text})
+       setFormData({...formData,[type]: e.nativeEvent.text})
     }
 
     return(
@@ -74,7 +74,7 @@ export default function RegisterForm(props){
                 placeholder='Correo Electronico'
                 containerStyle={styles.inputForm}
                 onChange={(e)=>onChange(e, 'email')}
-                rightIcon={<Icon type= 'material-community' name='email' iconStyle={styles.iconRight}/>}
+                rightIcon={<Icon type= 'material-community' name='at' iconStyle={styles.iconRight}/>}
             />
             <Input
                 placeholder='Contraseña'
@@ -103,7 +103,7 @@ export default function RegisterForm(props){
             />}
             />
             <Button
-                title='Quiero unirme'
+                title='Unirme'
                 containerStyle={styles.btnContainerRegister}
                 buttonStyle={styles.btnRegister}
                 onPress={onSubmit}
@@ -122,6 +122,9 @@ function defaultFormValues(){
 
 const styles = StyleSheet.create({
     formContainer:{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
         marginTop: 30
     },
     inputForm:{
@@ -129,12 +132,12 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     btnContainerRegister:{
-        marginTop: 20,
-        width: '98%'
+        marginTop: 22,
+        width: '70%',
+        borderRadius: 25
     },
     btnRegister:{
-        backgroundColor:'#0DB8EB',
-        borderRadius: 25
+        backgroundColor:'#1CC0F0',
     },
     iconRight:{
         color: '#c1c1c1'

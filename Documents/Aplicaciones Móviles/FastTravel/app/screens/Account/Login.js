@@ -58,10 +58,15 @@ const styles = StyleSheet.create({
     textRegister:{
         marginTop: 15,
         marginLeft:10,
-        marginRight: 10
+        marginRight: 10,
+        textAlign: 'center'
     },
     linkRegister:{
         color: '#32BCE5',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    loginText:{
+        textAlign: 'center'
     }
 })
