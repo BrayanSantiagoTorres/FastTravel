@@ -26,7 +26,7 @@ export default function RegisterForm(props){
                 type: 'error',
                 position: 'top',
                 text1: 'Password',
-                text2: 'El email no es correcto',
+                text2: 'El correo proporcionado no es correcto',
                 visibilityTime: 3000,
               });
         } else if (formData.password !== formData.repeatPassword){
@@ -34,7 +34,7 @@ export default function RegisterForm(props){
                 type: 'error',
                 position: 'top',
                 text1: 'Password',
-                text2: 'Las contraseñas deben ser identicas',
+                text2: 'Las contraseñas deben ser iguales',
                 visibilityTime: 3000,
               });
         } else if (formData.password.length < 6){
@@ -42,7 +42,7 @@ export default function RegisterForm(props){
                 type: 'error',
                 position: 'top',
                 text1: 'Password',
-                text2: 'El password debe tener almenos 6 carácteres',
+                text2: 'Tu contraseña debe tener almenos 6 carácteres',
                 visibilityTime: 3000,
               });
         } else{
@@ -50,14 +50,14 @@ export default function RegisterForm(props){
             .auth()
             .createUserWithEmailAndPassword(formData.email, formData.password)
             .then((response)=>{
-                navigation.navigate('Cuenta')
+                navigation.navigate('Mi cuenta')
             })
             .catch(()=>{
                 toastRef.current.show({
                     type: 'error',
                     position: 'top',
                     text1: 'Cuenta',
-                    text2: 'Este correo ya ha sido registrado',
+                    text2: 'Este correo ya ha sido registrado anteriormente',
                     visibilityTime: 3000,
                   });
             })
@@ -103,7 +103,7 @@ export default function RegisterForm(props){
             />}
             />
             <Button
-                title='Únete'
+                title='Unirme'
                 containerStyle={styles.btnContainerRegister}
                 buttonStyle={styles.btnRegister}
                 onPress={onSubmit}
@@ -122,6 +122,9 @@ function defaultFormValues(){
 
 const styles = StyleSheet.create({
     formContainer:{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
         marginTop: 30
     },
     inputForm:{
@@ -129,11 +132,12 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     btnContainerRegister:{
-        marginTop: 20,
-        width: '95%'
+        marginTop: 22,
+        width: '70%',
+        borderRadius: 25
     },
     btnRegister:{
-        backgroundColor:'#00a680'
+        backgroundColor:'#1CC0F0',
     },
     iconRight:{
         color: '#c1c1c1'

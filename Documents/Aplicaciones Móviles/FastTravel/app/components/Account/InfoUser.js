@@ -71,11 +71,12 @@ export default function InfoUser(props) {
       })
   }
 
+  //agregar un spiner para que la imagen se cargue automaticamente y no tengamos que resfrescar
 
   return (
       <View style={styles.viewUserInfo}>
         <Avatar
-            title='SANTI'
+            title='NewUser'
             rounded
             size='large'
             onPress={changeAvatar}
@@ -98,6 +99,7 @@ const styles = StyleSheet.create({
     viewUserInfo:{
         alignItems: 'center',
         justifyContent: 'center',
+        //flexBasis: 'row',
         backgroundColor: '#f2f2f2',
         paddingTop: 30,
         paddingBottom: 30

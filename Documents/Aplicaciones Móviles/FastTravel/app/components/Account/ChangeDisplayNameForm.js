@@ -12,9 +12,21 @@ export default function ChangeDisplayNameForm(props) {
     const onSubmit= ()=>{
         setError(null)
         if(!newDisplayName){
-            setError('El nombre no puede ser vacío')
+            toastRef.current.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Empty',
+                text2: 'El nombre no puede estar vacío',
+                visibilityTime: 3000,
+              });
         } else if (displayName === newDisplayName){
-            setError('El nombre no puede ser igual al actual')
+            toastRef.current.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Empty',
+                text2: 'El nombre no puede ser igual al actual',
+                visibilityTime: 3000,
+              });
         } else{
             setIsLoading(true)
             const update = {
@@ -72,9 +84,11 @@ const styles = StyleSheet.create({
     },
     btnContainer:{
         marginTop: 20,
-        width: '95%'
+        width: '86%',
+        borderRadius: 25,
+        alignContent: 'center'
     },
     btn:{
-        backgroundColor: '#00a680'
+        backgroundColor: '#1CC0F0'
     }
 })
