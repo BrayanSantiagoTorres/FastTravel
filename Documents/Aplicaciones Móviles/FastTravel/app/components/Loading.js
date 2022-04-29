@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     overlay:{
         height:100,
         width:230,
-        backgroundColor: '#D9FFED',
+        backgroundColor: '#EBFFF6',
         borderColor: '#1C56F0',
         borderWidth: 3,
         borderRadius: 9

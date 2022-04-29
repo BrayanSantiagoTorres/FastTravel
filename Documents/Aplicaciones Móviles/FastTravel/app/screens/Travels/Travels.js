@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, Image } from 'react-native'
 import {Icon} from 'react-native-elements'
 import {} from '../../utils/firebase'
 import firebase from 'firebase/app'
 import Loading from '../../components/Loading'
+import { ScrollView } from 'react-native-gesture-handler'
 
 export default function Travels({ navigation }){
 
@@ -21,7 +22,15 @@ export default function Travels({ navigation }){
 
     return(
         <View style={styles.viewBody}>
-            <Text>Travels</Text>
+            <Text style={styles.title}>Descubre los mejores detinos para viajar</Text>
+            <Image
+                style={styles.stretch}
+                source={require('../../../assets/img/frgtrfgtrfgtrfgtrff.jpg')}
+            />
+            <Image
+                style={styles.stretch}
+                source={require('../../../assets/img/img333.jpg')}
+            />
             {user && (
             <Icon
                 reverse
@@ -39,7 +48,19 @@ export default function Travels({ navigation }){
 const styles = StyleSheet.create({
     viewBody:{
         flex:1,
-        backgroundColor:'#fff'
+        backgroundColor:'#F6FFE8'
+    },
+    stretch:{
+        width: '100%',
+        height: 270,
+        resizeMode: 'contain',
+        marginBottom: 5
+    },
+    title:{
+        fontWeight:'bold',
+        fontSize: 20,
+        marginBottom:12,
+        textAlign:'center'
     },
     btnContainer:{
         position: 'absolute',
