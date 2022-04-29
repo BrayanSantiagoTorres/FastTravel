@@ -2,7 +2,8 @@ import { StyleSheet, Text, View, ScrollView, Alert, Dimensions } from 'react-nat
 import React, { useState } from 'react'
 import { Button, Input, Icon, Avatar, Image } from 'react-native-elements'
 import CountryPicker from 'react-native-country-picker-modal'
-import { map, size, filter } from 'lodash'
+import { map, size, filter, isEmpty } from 'lodash'
+import { validateEmail } from '../../utils/validation'
 
 import { loadImageFromGallery } from '../../utils/helpers'
 
@@ -19,8 +20,51 @@ export default function AddTravelForm({ toastRef, setLoading, navigation }) {
     const [imagesSelected, setImagesSelected ] = useState([])
 
     const addTravel = () => {
+        if (!validForm()) {
+            return
+        }
         console.log(formData)
-        console.log("Has añadido un viaje nuevo!")
+        console.log("Has añadido un viaje nuevo")
+    }
+
+    const validForm = () => {
+        clearErrors()
+        let isValid = true
+
+        if (isEmpty(formData.tipo)) {
+            setErrorTipo('Es necesario escribir el tipo de viaje.')
+            isValid = false
+        }
+
+        if (isEmpty(formData.address)) {
+            setErrorAddress('Es necesario escribir el destino.')
+            isValid = false
+        }
+
+        if (isEmpty(formData.phone)) {
+            setErrorPhone('Es necesario escribir un teléfono.')
+            isValid = false
+        }
+
+        if (!validateEmail(formData.email)) {
+            setErrorEmail('Debes ingresar un email válido.')
+            isValid = false
+        }
+
+        if (isEmpty(formData.description)) {
+            setErrorDescription('Es necesario escribir la descripción del lugar.')
+            isValid = false
+        }
+
+        return isValid
+    }
+
+    const clearErrors = () => {
+        setErrorDescription(null)
+        setErrorPhone(null)
+        setErrorEmail(null)
+        setErrorTipo(null)
+        setErrorAddress(null)
     }
     
     return (
@@ -55,7 +99,7 @@ function ImageTravel({ imageTravel }) {
     return (
     <View style={styles.viewPhoto}>
         <Image
-            style={{ width: widthScreen, height: 200}}
+            style={{ width: widthScreen, height: 230}}
             source={
                 imageTravel
                     ? { uri: imageTravel}
@@ -70,7 +114,7 @@ function UploadImage({ toastRef, imagesSelected, setImagesSelected }) {
     const imageSelect = async() => {
         const response = await loadImageFromGallery([4, 3])
         if (!response.status) {
-            toastRef.current.show('No ha seleccionado ninguna iamagen.', 3000)
+            toastRef.current.show('No ha seleccionado ninguna imagen.', 3000)
             return
         }
         setImagesSelected([...imagesSelected, response.image])
@@ -107,7 +151,7 @@ function UploadImage({ toastRef, imagesSelected, setImagesSelected }) {
                 size(imagesSelected) < 7 && (
                     <Icon
                        type='material-community'
-                       name='camera'
+                       name='image'
                        color='#7a7a7a'
                        containerStyle={styles.containerIcon}
                        onPress={imageSelect}
@@ -140,23 +184,38 @@ function FormAdd({ formData, setFormData, errorTipo, errorDescription, errorEmai
     return (
         <View style={styles.viewForm}>
             <Input
-                placeholder='Tipo de viaje...'
+                placeholder='Tipo de viaje'
                 defaultValue={formData.tipo}
                 onChange={(e) => onChange(e, 'tipo')}
                 errorMessage={errorTipo}
+                rightIcon={{
+                    type: 'material-community',
+                    name: 'pencil',
+                    color: '#557DEA'
+                }}
             />
             <Input
-                placeholder='Lugar de destino...'
+                placeholder='Lugar de destino'
                 defaultValue={formData.address}
                 onChange={(e) => onChange(e, 'address')}
                 errorMessage={errorAddress}
+                rightIcon={{
+                    type: 'material-community',
+                    name: 'earth',
+                    color: '#557DEA'
+                }}
             />
             <Input
                 keyboardType='email-address'
-                placeholder='email de contacto...'
+                placeholder='email de contacto'
                 defaultValue={formData.email}
                 onChange={(e) => onChange(e, 'email')}
                 errorMessage={errorEmail}
+                rightIcon={{
+                    type: 'material-community',
+                    name: 'email-variant',
+                    color: '#557DEA'
+                }}
             />
             <View style={styles.phoneView}>
                 <CountryPicker
@@ -177,21 +236,31 @@ function FormAdd({ formData, setFormData, errorTipo, errorDescription, errorEmai
                     }}
                 />
                 <Input
-                    placeholder='WhatsApp de contacto...'
+                    placeholder='WhatsApp de contacto'
                     keyboardType='phone-pad'
                     containerStyle={styles.inputPhone}
                     defaultValue={formData.phone}
                     onChange={(e) => onChange(e, 'phone')}
                     errorMessage={errorPhone}
+                    rightIcon={{
+                        type: 'material-community',
+                        name: 'whatsapp',
+                        color: '#557DEA'
+                    }}
                 />
             </View> 
             <Input
-                placeholder='Descripción del viaje...'
+                placeholder='Descripción del viaje'
                 multiline
                 containerStyle={styles.textArea}
                 defaultValue={formData.description}
                 onChange={(e) => onChange(e, 'description')}
                 errorMessage={errorDescription}
+                rightIcon={{
+                    type: 'material-community',
+                    name: 'message-draw',
+                    color: '#557DEA'
+                }}
             />              
         </View>
     )
@@ -214,7 +283,8 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     viewForm:{
-        marginHorizontal: 10,
+        marginHorizontal: 13,
+        marginTop: 25
     },
     textArea:{
         height: 100,
@@ -225,10 +295,10 @@ const styles = StyleSheet.create({
         flexDirection:'row'
     },
     inputPhone:{
-        width: '80%'
+        width: '100%'
     },
     btnAddTravel:{
-        margin: 20,
+        margin: 50,
         backgroundColor: '#1CC0F0',
         borderRadius:25
     },
@@ -241,14 +311,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 10,
-        height: 70,
-        width: 79,
-        backgroundColor: '#e3e3e3'
+        height: 90,
+        width: 90,
+        backgroundColor: '#e3e3e3',
+        borderRadius: 10
     },
     miniatureStyle:{
-        width: 70,
-        height: 70,
-        marginRight: 10
+        width: 90,
+        height: 90,
+        marginRight: 15
     },
     viewPhoto:{
         alignItems: 'center',
