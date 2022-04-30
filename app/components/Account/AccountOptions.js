@@ -87,7 +87,7 @@ function generateOptions(selectedComponent){
 
 const styles = StyleSheet.create({
   selectedComponent:{
-    textDecorationColor: '#D35400'
+    textDecorationColor: '#8a1c8a'
 },
 
 
