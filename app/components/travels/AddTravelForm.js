@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     },
     btnAddTravel:{
         margin: 50,
-        backgroundColor: '#E74C3C',
+        backgroundColor: '#2471A3',
         borderRadius:25
     },
     viewImages:{
