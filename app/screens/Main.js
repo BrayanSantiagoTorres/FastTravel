@@ -12,6 +12,6 @@ export default function Main(){
 const styles = StyleSheet.create({
     viewBody:{
         flex:1,
-        backgroundColor:'#FA8072'
+        backgroundColor:'#00FF7F'
     }
 })
