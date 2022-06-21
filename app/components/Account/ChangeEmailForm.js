@@ -5,7 +5,7 @@ import firebase from "firebase";
 import { validateEmail } from "../../utils/Validation";
 import { assign, isEmpty } from "lodash";
 
-export default function ChangeDisplayEmailForm(props){
+export default function ChangeEmailForm(props){
 
     const{email, setShowModal, toastRef, setReloadUserInfo}= props
     const[newEmail, setNewEmail] = useState(email)
@@ -137,4 +137,3 @@ const styles = StyleSheet.create({
     }
 
 })
-
