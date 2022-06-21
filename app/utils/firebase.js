@@ -1,12 +1,12 @@
 import firebase from 'firebase/app'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyC7x2hvd7zN-rBeybW86JKLaPj78RTerD0",
-    authDomain: "fasttrav-9223e.firebaseapp.com",
-    projectId: "fasttrav-9223e",
-    storageBucket: "fasttrav-9223e.appspot.com",
-    messagingSenderId: "1022649307866",
-    appId: "1:1022649307866:web:9dc1cfe8d53cd8c84b8be3"
-  }
+  apiKey: "AIzaSyAGhs8A-Ok1dHAIY3ctalg3oMkdCtUcjhk",
+  authDomain: "proyecto-fasttravel.firebaseapp.com",
+  projectId: "proyecto-fasttravel",
+  storageBucket: "proyecto-fasttravel.appspot.com",
+  messagingSenderId: "812437809906",
+  appId: "1:812437809906:web:d82588717eafc5746ebe6b"
+}
 
 export const firebaseApp = firebase.initializeApp(firebaseConfig)
