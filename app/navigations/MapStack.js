@@ -8,7 +8,7 @@ export default function MapStack(){
     return(
         <Stack.Navigator>
             <Stack.Screen
-                name='Mapas'
+                name='Mapa'
                 component={Map}
                 options={{tittle:'Mapa'}}
             />
