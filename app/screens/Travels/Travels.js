@@ -48,7 +48,7 @@ export default function Travels({ navigation }){
     const styles = StyleSheet.create({
     viewBody:{
         flex:1,
-        backgroundColor:'#5B2C6F'
+        backgroundColor:'#A5B328'
     },
     stretch:{
         width: '100%',

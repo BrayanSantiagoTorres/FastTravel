@@ -12,6 +12,6 @@ export default function Map(){
 const styles = StyleSheet.create({
     viewBody:{
         flex:1,
-        backgroundColor:'#F6FFE8'
+        backgroundColor:'#4169E1'
     }
 })
